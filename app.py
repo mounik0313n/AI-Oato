@@ -24,7 +24,8 @@ warnings.filterwarnings("ignore", message="Couldn't find ffmpeg or avconv - defa
 
 # Function to process .wav files directly
 def transcribe_audio(wav_file, model_size="base"):
-    model = whisper.load_model(model_size)
+    # Use OpenAI Whisper model to transcribe the audio file
+    model = whisper.load_model(model_size)  # Correctly using whisper's load_model method
     result = model.transcribe(wav_file, fp16=False)
     return result['text']
 

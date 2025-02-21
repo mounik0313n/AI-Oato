@@ -1,5 +1,5 @@
 Flask
 google-generativeai
 nltk
-whisper
+openai-whisper
 gunicorn
