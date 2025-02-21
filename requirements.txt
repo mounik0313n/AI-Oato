@@ -1,0 +1,6 @@
+flask
+whisper
+nltk
+google-generativeai
+ffmpeg-python
+werkzeug

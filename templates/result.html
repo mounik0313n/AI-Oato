@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Results</title>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            width: 70%;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 28px;
+        }
+
+        .section {
+            text-align: left;
+            margin: 20px 0;
+            padding: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            font-size: 22px;
+            color: #2980b9;
+        }
+
+        .section p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 16px;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 10px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .processing-time {
+            font-size: 14px;
+            color: #27ae60;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Transcription Summary</h1>
+
+        <!-- Summary Section -->
+        <div class="section">
+            <h2>Summary</h2>
+            <p>{{ summary }}</p>
+            <a href="/download/summary.txt" class="btn">Download Summary</a>
+        </div>
+
+        <!-- Key Topics Section -->
+        <div class="section">
+            <h2>Key Topics</h2>
+            <p>{{ key_topics }}</p>
+            <a href="/download/key_topics.txt" class="btn">Download Key Topics</a>
+        </div>
+
+        <!-- Processing Time -->
+        <p class="processing-time">Processing Time: {{ processing_time }} seconds</p>
+
+        <!-- Back to Upload -->
+        <a href="/" class="btn">Upload Another File</a>
+    </div>
+
+</body>
+</html>
