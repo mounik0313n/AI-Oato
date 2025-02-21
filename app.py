@@ -19,6 +19,16 @@ app.config['PROCESSED_FOLDER'] = 'processed'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
 
+# Ensure ffmpeg is installed
+def install_ffmpeg():
+    try:
+        subprocess.run(["ffmpeg", "-version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except FileNotFoundError:
+        subprocess.run(["apt-get", "update"], check=True)
+        subprocess.run(["apt-get", "install", "-y", "ffmpeg"], check=True)
+
+install_ffmpeg()
+
 def convert_m4a_to_wav(m4a_file):
     if not os.path.exists(m4a_file):
         return None
@@ -32,8 +42,7 @@ def convert_m4a_to_wav(m4a_file):
     return wav_file
 
 def transcribe_audio(wav_file, model_size="base"):
-    # Using the whisper.load_model method for OpenAI Whisper model
-    model = whisper.load_model(model_size)  # This is for OpenAI Whisper model
+    model = whisper.load_model(model_size)
     result = model.transcribe(wav_file, fp16=False)
     return result['text']
 
