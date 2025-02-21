@@ -2,6 +2,5 @@ Flask
 google-generativeai
 nltk
 whisper
-pydub
 audioread
 gunicorn

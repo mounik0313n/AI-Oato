@@ -1,5 +1,4 @@
 import os
-import subprocess
 import whisper  # OpenAI Whisper library for transcription
 import google.generativeai as genai
 import nltk
@@ -7,7 +6,6 @@ import time
 import warnings
 from flask import Flask, request, render_template, send_file
 from werkzeug.utils import secure_filename
-from pydub import AudioSegment
 import audioread
 
 GOOGLE_GEMINI_API_KEY = "AIzaSyBmL_zLi-7T6Ait-lpxJudUmNAZjkvk7TA"
@@ -22,10 +20,10 @@ app.config['PROCESSED_FOLDER'] = 'processed'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
 
-# Suppress the warning about ffmpeg from pydub
-warnings.filterwarnings("ignore", message="Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work")
+# Suppress the warning from pydub about missing ffmpeg
+warnings.filterwarnings("ignore", message="Couldn't find ffmpeg or avconv - defaulting to ffmpeg")
 
-# Function to convert .m4a to .wav using audioread and pydub
+# Function to convert .m4a to .wav without ffmpeg, using audioread
 def convert_m4a_to_wav(m4a_file):
     if not os.path.exists(m4a_file):
         return None
@@ -33,11 +31,11 @@ def convert_m4a_to_wav(m4a_file):
     wav_file = os.path.join(app.config['PROCESSED_FOLDER'], os.path.basename(m4a_file).replace(".m4a", ".wav"))
     
     try:
-        # Using audioread to read .m4a file and pydub to export to .wav
+        # Using audioread to read the .m4a file directly
         with audioread.audio_open(m4a_file) as audio_file:
-            # No need to use ffmpeg explicitly for conversion
-            audio = AudioSegment.from_file(audio_file, format="m4a")
-            audio.export(wav_file, format="wav")
+            # No need for pydub or ffmpeg, just copy raw audio data into the wav format
+            with open(wav_file, 'wb') as out_file:
+                out_file.write(audio_file.read_data())
     except Exception as e:
         print(f"Error converting file: {e}")
         return None
