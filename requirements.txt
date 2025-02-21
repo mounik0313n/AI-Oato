@@ -3,4 +3,5 @@ whisper
 nltk
 google-generativeai
 ffmpeg-python
+gunicorn
 werkzeug
