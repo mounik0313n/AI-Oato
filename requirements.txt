@@ -5,4 +5,3 @@ google-generativeai
 ffmpeg-python
 gunicorn
 werkzeug
-Flask

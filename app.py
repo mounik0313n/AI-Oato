@@ -1,6 +1,6 @@
 import os
 import subprocess
-import whisper
+import whisper  # OpenAI Whisper library for transcription
 import google.generativeai as genai
 import nltk
 import time
@@ -32,7 +32,8 @@ def convert_m4a_to_wav(m4a_file):
     return wav_file
 
 def transcribe_audio(wav_file, model_size="base"):
-    model = whisper.load_model(model_size)
+    # Using the whisper.load_model method for OpenAI Whisper model
+    model = whisper.load_model(model_size)  # This is for OpenAI Whisper model
     result = model.transcribe(wav_file, fp16=False)
     return result['text']
 
