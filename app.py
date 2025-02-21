@@ -6,8 +6,6 @@ import time
 import warnings
 from flask import Flask, request, render_template, send_file
 from werkzeug.utils import secure_filename
-import audioread
-from io import BytesIO
 
 GOOGLE_GEMINI_API_KEY = "AIzaSyBmL_zLi-7T6Ait-lpxJudUmNAZjkvk7TA"
 genai.configure(api_key=GOOGLE_GEMINI_API_KEY)
@@ -24,25 +22,7 @@ os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
 # Suppress the warning from pydub about missing ffmpeg
 warnings.filterwarnings("ignore", message="Couldn't find ffmpeg or avconv - defaulting to ffmpeg")
 
-# Function to convert .m4a to .wav using audioread (without pydub)
-def convert_m4a_to_wav(m4a_file):
-    if not os.path.exists(m4a_file):
-        return None
-    
-    wav_file = os.path.join(app.config['PROCESSED_FOLDER'], os.path.basename(m4a_file).replace(".m4a", ".wav"))
-    
-    try:
-        # Using audioread to read the .m4a file
-        with audioread.audio_open(m4a_file) as audio_file:
-            # Save the .m4a file as .wav directly using raw audio data
-            with open(wav_file, 'wb') as out_file:
-                out_file.write(audio_file.read_data())
-    except Exception as e:
-        print(f"Error converting file: {e}")
-        return None
-    
-    return wav_file
-
+# Function to process .wav files directly
 def transcribe_audio(wav_file, model_size="base"):
     model = whisper.load_model(model_size)
     result = model.transcribe(wav_file, fp16=False)
@@ -80,10 +60,8 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
-        wav_file = convert_m4a_to_wav(file_path)
-        if not wav_file:
-            return "Error converting audio file."
-
+        # Directly process the .wav file without conversion
+        wav_file = file_path
         transcript = transcribe_audio(wav_file)
         summary = summarize_with_gemini(transcript)
         key_topics = extract_key_topics(transcript)
