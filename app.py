@@ -7,6 +7,7 @@ import warnings
 from flask import Flask, request, render_template, send_file
 from werkzeug.utils import secure_filename
 import audioread
+from io import BytesIO
 
 GOOGLE_GEMINI_API_KEY = "AIzaSyBmL_zLi-7T6Ait-lpxJudUmNAZjkvk7TA"
 genai.configure(api_key=GOOGLE_GEMINI_API_KEY)
@@ -23,7 +24,7 @@ os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
 # Suppress the warning from pydub about missing ffmpeg
 warnings.filterwarnings("ignore", message="Couldn't find ffmpeg or avconv - defaulting to ffmpeg")
 
-# Function to convert .m4a to .wav without ffmpeg, using audioread
+# Function to convert .m4a to .wav using audioread (without pydub)
 def convert_m4a_to_wav(m4a_file):
     if not os.path.exists(m4a_file):
         return None
@@ -31,9 +32,9 @@ def convert_m4a_to_wav(m4a_file):
     wav_file = os.path.join(app.config['PROCESSED_FOLDER'], os.path.basename(m4a_file).replace(".m4a", ".wav"))
     
     try:
-        # Using audioread to read the .m4a file directly
+        # Using audioread to read the .m4a file
         with audioread.audio_open(m4a_file) as audio_file:
-            # No need for pydub or ffmpeg, just copy raw audio data into the wav format
+            # Save the .m4a file as .wav directly using raw audio data
             with open(wav_file, 'wb') as out_file:
                 out_file.write(audio_file.read_data())
     except Exception as e:
